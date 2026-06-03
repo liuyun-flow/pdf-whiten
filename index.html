@@ -182,10 +182,7 @@ body {
       </div>
     </div>
 
-    <div class="btn-row">
-      <button class="btn btn-success" id="viewBtn">📱 查看</button>
-      <button class="btn btn-primary" id="downloadBtn">⬇️ 下载</button>
-    </div>
+    <button class="btn btn-primary" id="downloadBtn">⬇️ 下载白底 PDF</button>
     <p style="font-size:12px;color:var(--sub);margin-top:8px;" id="mobileHint"></p>
   </div>
 
@@ -226,7 +223,6 @@ const resultTitle = document.getElementById('resultTitle');
 const resultDetail = document.getElementById('resultDetail');
 const qualityBadge = document.getElementById('qualityBadge');
 const downloadBtn = document.getElementById('downloadBtn');
-const viewBtn = document.getElementById('viewBtn');
 const mobileHint = document.getElementById('mobileHint');
 const levelSelect = document.getElementById('level');
 const reLevel = document.getElementById('reLevel');
@@ -650,11 +646,12 @@ function showResult(pageCount, level) {
   const isWeChat = /MicroMessenger/i.test(ua);
   const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(ua);
   if (isWeChat) {
-    mobileHint.textContent = '👆 点「查看」→ 右上角「···」→ 分享/保存';
+    mobileHint.innerHTML = '⚠️ 微信内无法下载<br>请点右上角 <b>「···」</b> → <b>「在浏览器打开」</b><br>然后在浏览器中下载';
+    mobileHint.style.color = 'var(--danger)';
   } else if (isMobile) {
-    mobileHint.textContent = '👆 点「查看」打开 PDF，然后用浏览器保存';
+    mobileHint.textContent = '点击下载，如无法下载请用浏览器自带功能保存';
   } else {
-    mobileHint.textContent = '点「查看」预览 · 「下载」保存到电脑';
+    mobileHint.textContent = '';
   }
 
   processBtn.disabled = false;
@@ -667,15 +664,7 @@ reprocessBtn.addEventListener('click', () => {
   processPDF(reLevel.value);
 });
 
-// ==================== View / Download ====================
-viewBtn.addEventListener('click', () => {
-  if (!outputPdfBytes) return;
-  const blob = new Blob([outputPdfBytes], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
-  window.open(url, '_blank');
-  showToast('PDF 已在新标签页打开');
-});
-
+// ==================== Download ====================
 downloadBtn.addEventListener('click', () => {
   if (!outputPdfBytes) return;
   const blob = new Blob([outputPdfBytes], { type: 'application/pdf' });
@@ -683,8 +672,14 @@ downloadBtn.addEventListener('click', () => {
   const a = document.createElement('a');
   a.href = url; a.download = outputFileName;
   document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-  showToast('若未下载，请点「查看」按钮');
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+
+  const isWeChat = /MicroMessenger/i.test(navigator.userAgent);
+  if (isWeChat) {
+    showToast('请点右上角 ··· → 在浏览器打开');
+  } else {
+    showToast('下载已开始');
+  }
 });
 
 // ==================== Init ====================
