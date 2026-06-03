@@ -309,7 +309,9 @@ body {
     <div class="result-icon">✅</div>
     <div class="result-title">处理完成！</div>
     <div class="result-detail" id="resultDetail"></div>
-    <button class="btn btn-download" id="downloadBtn">⬇️ 下载白底 PDF</button>
+    <button class="btn btn-download" id="viewBtn">📱 查看白底 PDF</button>
+    <p style="font-size:12px;color:var(--sub);margin-top:8px;" id="mobileHint">打开后可分享或保存到手机</p>
+    <button class="btn btn-download" id="downloadBtn" style="margin-top:8px;background:var(--accent);">⬇️ 直接下载</button>
   </div>
 
   <!-- Footer -->
@@ -592,6 +594,18 @@ async function processPDF() {
       progressWrap.classList.remove('show');
       resultDiv.classList.add('show');
       resultDetail.textContent = `${pageCount} 页 · 背景已白化 · 原始文件未被修改`;
+
+      // Platform-specific hint
+      const ua = navigator.userAgent;
+      const isWeChat = /MicroMessenger/i.test(ua);
+      const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(ua);
+      if (isWeChat) {
+        mobileHint.textContent = '👆 点「查看」→ 右上角「···」→ 分享/保存';
+      } else if (isMobile) {
+        mobileHint.textContent = '👆 点「查看」打开 PDF，然后用浏览器自带功能保存';
+      } else {
+        mobileHint.textContent = '点「查看」预览 · 点「下载」保存到电脑';
+      }
     }, 600);
 
   } catch (err) {
@@ -604,19 +618,43 @@ async function processPDF() {
 
 processBtn.addEventListener('click', processPDF);
 
-// ==================== Download ====================
+// ==================== View / Download ====================
+const viewBtn = document.getElementById('viewBtn');
+const mobileHint = document.getElementById('mobileHint');
+
+function getPdfBlobUrl() {
+  if (!outputPdfBytes) return null;
+  const blob = new Blob([outputPdfBytes], { type: 'application/pdf' });
+  return URL.createObjectURL(blob);
+}
+
+// View button - opens PDF in new tab (works on mobile + WeChat)
+viewBtn.addEventListener('click', () => {
+  const url = getPdfBlobUrl();
+  if (!url) return;
+  window.open(url, '_blank');
+  showToast('PDF 已在新标签页打开，可分享或保存');
+});
+
+// Download button - traditional download (best on desktop)
 downloadBtn.addEventListener('click', () => {
   if (!outputPdfBytes) return;
   const blob = new Blob([outputPdfBytes], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
+
+  // Try download first
   const a = document.createElement('a');
   a.href = url;
   a.download = outputFileName;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  showToast('下载已开始');
+
+  // If download didn't work (common on mobile), open in new tab
+  setTimeout(() => {
+    URL.revokeObjectURL(url);
+  }, 1000);
+  showToast('若未自动下载，请点击上方"查看"按钮');
 });
 
 // ==================== Init ====================
