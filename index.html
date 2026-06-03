@@ -6,265 +6,128 @@
 <title>PDF 背景变白</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 :root {
-  --bg: #f5f5f7;
-  --card: #ffffff;
-  --text: #1d1d1f;
-  --sub: #86868b;
-  --accent: #0071e3;
-  --border: #d2d2d7;
-  --danger: #ff3b30;
-  --success: #34c759;
-  --radius: 16px;
+  --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --sub: #86868b;
+  --accent: #0071e3; --border: #d2d2d7; --success: #34c759;
+  --warn: #ff9500; --danger: #ff3b30; --radius: 16px;
 }
-
 body {
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
+  background: var(--bg); color: var(--text); min-height: 100vh;
+  display: flex; align-items: center; justify-content: center; padding: 16px;
 }
+.app { width: 100%; max-width: 480px; display: flex; flex-direction: column; gap: 14px; }
+.header { text-align: center; padding: 8px 0; }
+.header .icon { font-size: 48px; margin-bottom: 8px; }
+.header h1 { font-size: 22px; font-weight: 600; }
+.header p { font-size: 14px; color: var(--sub); margin-top: 4px; }
 
-.app {
-  width: 100%;
-  max-width: 480px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Header */
-.header {
-  text-align: center;
-  padding: 8px 0;
-}
-.header .icon {
-  font-size: 48px;
-  margin-bottom: 8px;
-}
-.header h1 {
-  font-size: 22px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-.header p {
-  font-size: 14px;
-  color: var(--sub);
-  margin-top: 4px;
-}
-
-/* Upload area */
 .upload-zone {
-  background: var(--card);
-  border: 2px dashed var(--border);
-  border-radius: var(--radius);
-  padding: 40px 20px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s;
+  background: var(--card); border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 40px 20px; text-align: center; cursor: pointer; transition: all 0.2s;
   -webkit-tap-highlight-color: transparent;
 }
-.upload-zone:hover, .upload-zone.drag-over {
-  border-color: var(--accent);
-  background: #f0f7ff;
-}
-.upload-zone .upload-icon {
-  font-size: 40px;
-  margin-bottom: 12px;
-}
-.upload-zone .upload-text {
-  font-size: 15px;
-  font-weight: 500;
-}
-.upload-zone .upload-hint {
-  font-size: 13px;
-  color: var(--sub);
-  margin-top: 6px;
-}
+.upload-zone:hover, .upload-zone.drag-over { border-color: var(--accent); background: #f0f7ff; }
+.upload-zone .upload-icon { font-size: 40px; margin-bottom: 12px; }
+.upload-zone .upload-text { font-size: 15px; font-weight: 500; }
+.upload-zone .upload-hint { font-size: 13px; color: var(--sub); margin-top: 6px; }
 
-/* File info */
 .file-info {
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 16px;
-  display: none;
-  align-items: center;
-  gap: 12px;
+  background: var(--card); border-radius: var(--radius); padding: 16px;
+  display: none; align-items: center; gap: 12px;
 }
 .file-info.show { display: flex; }
 .file-info .file-icon { font-size: 32px; flex-shrink: 0; }
 .file-info .file-details { flex: 1; min-width: 0; }
-.file-info .file-name {
-  font-size: 14px;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.file-info .file-size {
-  font-size: 12px;
-  color: var(--sub);
-  margin-top: 2px;
-}
+.file-info .file-name { font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-info .file-size { font-size: 12px; color: var(--sub); margin-top: 2px; }
 .file-info .file-remove {
-  width: 32px; height: 32px;
-  border: none; background: #f5f5f7;
-  border-radius: 50%; font-size: 18px;
-  cursor: pointer; flex-shrink: 0;
-  color: var(--sub);
+  width: 32px; height: 32px; border: none; background: #f5f5f7;
+  border-radius: 50%; font-size: 18px; cursor: pointer; color: var(--sub); flex-shrink: 0;
 }
 
-/* Level selector */
 .level-selector {
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 12px 16px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
+  background: var(--card); border-radius: var(--radius); padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
 }
-.level-selector label {
-  font-size: 14px;
-  font-weight: 500;
-  flex-shrink: 0;
-}
+.level-selector label { font-size: 14px; font-weight: 500; flex-shrink: 0; }
 .level-selector select {
-  flex: 1;
-  padding: 8px 12px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  font-size: 14px;
-  background: white;
-  -webkit-appearance: none;
-  appearance: none;
+  flex: 1; padding: 8px 12px; border: 1px solid var(--border); border-radius: 10px;
+  font-size: 14px; background: white; -webkit-appearance: none; appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2386868b' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
+  background-repeat: no-repeat; background-position: right 12px center; padding-right: 36px;
 }
 
-/* Buttons */
 .btn {
-  width: 100%;
-  padding: 14px 24px;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+  width: 100%; padding: 14px 24px; border: none; border-radius: var(--radius);
+  font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.2s;
   -webkit-tap-highlight-color: transparent;
 }
-.btn-primary {
-  background: var(--accent);
-  color: white;
-}
+.btn-primary { background: var(--accent); color: white; }
 .btn-primary:hover { opacity: 0.9; }
-.btn-primary:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-success { background: var(--success); color: white; }
+.btn-success:hover { opacity: 0.9; }
+.btn-outline {
+  background: white; color: var(--accent); border: 2px solid var(--accent);
 }
-.btn-download {
-  background: var(--success);
-  color: white;
-}
-.btn-download:hover { opacity: 0.9; }
+.btn-outline:hover { background: #f0f7ff; }
 
-/* Progress */
 .progress-wrap {
-  display: none;
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 20px;
-  text-align: center;
+  display: none; background: var(--card); border-radius: var(--radius); padding: 20px; text-align: center;
 }
 .progress-wrap.show { display: block; }
-.progress-bar-outer {
-  background: #e5e5ea;
-  border-radius: 8px;
-  height: 8px;
-  overflow: hidden;
-  margin: 12px 0;
-}
-.progress-bar-inner {
-  height: 100%;
-  background: var(--accent);
-  border-radius: 8px;
-  transition: width 0.3s;
-  width: 0%;
-}
-.progress-text {
-  font-size: 13px;
-  color: var(--sub);
-}
+.progress-bar-outer { background: #e5e5ea; border-radius: 8px; height: 8px; overflow: hidden; margin: 12px 0; }
+.progress-bar-inner { height: 100%; background: var(--accent); border-radius: 8px; transition: width 0.3s; width: 0%; }
+.progress-text { font-size: 13px; color: var(--sub); }
 
-/* Result */
 .result {
-  display: none;
-  background: var(--card);
-  border-radius: var(--radius);
-  padding: 24px;
-  text-align: center;
+  display: none; background: var(--card); border-radius: var(--radius); padding: 20px; text-align: center;
 }
 .result.show { display: block; }
-.result .result-icon {
-  font-size: 48px;
-  margin-bottom: 8px;
-}
-.result .result-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
-.result .result-detail {
-  font-size: 13px;
-  color: var(--sub);
-  margin-bottom: 16px;
-}
+.result .result-icon { font-size: 40px; margin-bottom: 6px; }
+.result .result-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.result .result-detail { font-size: 13px; color: var(--sub); margin-bottom: 12px; }
 
-/* Toast */
+/* Quality badge */
+.quality-badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600; margin-bottom: 12px;
+}
+.quality-good { background: #e8f8ee; color: #1a7a3a; }
+.quality-ok { background: #fff8e8; color: #996a00; }
+.quality-bad { background: #ffe8e8; color: #991a1a; }
+
+/* Re-process section */
+.reprocess-wrap {
+  background: #f8f8fa; border-radius: 12px; padding: 14px; margin-bottom: 12px; text-align: left;
+}
+.reprocess-wrap .rp-label { font-size: 13px; color: var(--sub); margin-bottom: 8px; }
+.reprocess-wrap .rp-row { display: flex; gap: 8px; }
+.reprocess-wrap select { flex: 1; }
+.reprocess-wrap .btn { width: auto; padding: 8px 18px; font-size: 14px; flex-shrink: 0; }
+
+.btn-row { display: flex; gap: 8px; }
+.btn-row .btn { flex: 1; }
+
 .toast {
-  position: fixed;
-  bottom: 24px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1d1d1f;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 20px;
-  font-size: 14px;
-  opacity: 0;
-  transition: opacity 0.3s;
-  pointer-events: none;
-  z-index: 999;
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+  background: #1d1d1f; color: white; padding: 10px 20px; border-radius: 20px;
+  font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 999;
 }
 .toast.show { opacity: 1; }
-
-/* Footer */
-.footer {
-  text-align: center;
-  font-size: 12px;
-  color: var(--sub);
-  padding: 8px;
-}
+.footer { text-align: center; font-size: 12px; color: var(--sub); padding: 8px; }
 </style>
 </head>
 <body>
 
 <div class="app">
-  <!-- Header -->
   <div class="header">
     <div class="icon">📄✨</div>
     <h1>PDF 背景变白</h1>
-    <p>扫描件去蓝底/灰底，打印更干净</p>
+    <p>扫描件去蓝底/灰底，智能均匀白化</p>
   </div>
 
-  <!-- Upload -->
   <div class="upload-zone" id="uploadZone">
     <div class="upload-icon">📤</div>
     <div class="upload-text">点击上传或拖拽 PDF</div>
@@ -272,7 +135,6 @@ body {
   </div>
   <input type="file" id="fileInput" accept=".pdf" style="display:none">
 
-  <!-- File info -->
   <div class="file-info" id="fileInfo">
     <div class="file-icon">📎</div>
     <div class="file-details">
@@ -282,7 +144,6 @@ body {
     <button class="file-remove" id="fileRemove">✕</button>
   </div>
 
-  <!-- Level -->
   <div class="level-selector">
     <label for="level">处理强度</label>
     <select id="level">
@@ -292,10 +153,8 @@ body {
     </select>
   </div>
 
-  <!-- Process button -->
   <button class="btn btn-primary" id="processBtn" disabled>开始处理</button>
 
-  <!-- Progress -->
   <div class="progress-wrap" id="progress">
     <div class="progress-text" id="progressLabel">处理中…</div>
     <div class="progress-bar-outer">
@@ -304,23 +163,37 @@ body {
     <div class="progress-text" id="progressDetail"></div>
   </div>
 
-  <!-- Result -->
   <div class="result" id="result">
-    <div class="result-icon">✅</div>
-    <div class="result-title">处理完成！</div>
+    <div class="result-icon" id="resultIcon">✅</div>
+    <div class="result-title" id="resultTitle">处理完成</div>
+    <div class="quality-badge" id="qualityBadge"></div>
     <div class="result-detail" id="resultDetail"></div>
-    <button class="btn btn-download" id="viewBtn">📱 查看白底 PDF</button>
-    <p style="font-size:12px;color:var(--sub);margin-top:8px;" id="mobileHint">打开后可分享或保存到手机</p>
-    <button class="btn btn-download" id="downloadBtn" style="margin-top:8px;background:var(--accent);">⬇️ 直接下载</button>
+
+    <!-- Re-process -->
+    <div class="reprocess-wrap">
+      <div class="rp-label">效果不满意？换个强度重新处理（无需重新上传）</div>
+      <div class="rp-row">
+        <select id="reLevel">
+          <option value="low">保守</option>
+          <option value="normal">标准</option>
+          <option value="high" selected>强力</option>
+        </select>
+        <button class="btn btn-outline" id="reprocessBtn">🔄 重新处理</button>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-success" id="viewBtn">📱 查看</button>
+      <button class="btn btn-primary" id="downloadBtn">⬇️ 下载</button>
+    </div>
+    <p style="font-size:12px;color:var(--sub);margin-top:8px;" id="mobileHint"></p>
   </div>
 
-  <!-- Footer -->
   <div class="footer">所有处理在你的设备本地完成 · 无需上传</div>
 </div>
 
 <div class="toast" id="toast"></div>
 
-<!-- CDN Libraries -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.mjs" type="module"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 
@@ -329,8 +202,11 @@ import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379
 
 // ==================== State ====================
 let selectedFile = null;
+let cachedArrayBuffer = null;  // Cache for re-processing
 let outputPdfBytes = null;
 let outputFileName = '';
+let lastLevel = 'high';
+let qualityReport = null;
 
 // ==================== DOM ====================
 const uploadZone = document.getElementById('uploadZone');
@@ -345,18 +221,24 @@ const progressBar = document.getElementById('progressBar');
 const progressDetail = document.getElementById('progressDetail');
 const progressLabel = document.getElementById('progressLabel');
 const resultDiv = document.getElementById('result');
+const resultIcon = document.getElementById('resultIcon');
+const resultTitle = document.getElementById('resultTitle');
 const resultDetail = document.getElementById('resultDetail');
+const qualityBadge = document.getElementById('qualityBadge');
 const downloadBtn = document.getElementById('downloadBtn');
+const viewBtn = document.getElementById('viewBtn');
+const mobileHint = document.getElementById('mobileHint');
 const levelSelect = document.getElementById('level');
+const reLevel = document.getElementById('reLevel');
+const reprocessBtn = document.getElementById('reprocessBtn');
 const toast = document.getElementById('toast');
 
 // ==================== Toast ====================
 let toastTimer;
 function showToast(msg) {
-  toast.textContent = msg;
-  toast.classList.add('show');
+  toast.textContent = msg; toast.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
+  toastTimer = setTimeout(() => toast.classList.remove('show'), 2500);
 }
 
 // ==================== File Handling ====================
@@ -364,46 +246,28 @@ uploadZone.addEventListener('click', () => fileInput.click());
 fileInput.addEventListener('change', (e) => {
   if (e.target.files.length > 0) handleFile(e.target.files[0]);
 });
-
-uploadZone.addEventListener('dragover', (e) => {
-  e.preventDefault();
-  uploadZone.classList.add('drag-over');
-});
-uploadZone.addEventListener('dragleave', () => {
-  uploadZone.classList.remove('drag-over');
-});
+uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
 uploadZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  uploadZone.classList.remove('drag-over');
+  e.preventDefault(); uploadZone.classList.remove('drag-over');
   if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
 });
-
 fileRemove.addEventListener('click', () => {
-  selectedFile = null;
-  fileInfo.classList.remove('show');
-  uploadZone.style.display = '';
-  processBtn.disabled = true;
-  fileInput.value = '';
+  selectedFile = null; cachedArrayBuffer = null; outputPdfBytes = null;
+  fileInfo.classList.remove('show'); uploadZone.style.display = '';
+  processBtn.disabled = true; fileInput.value = '';
+  resultDiv.classList.remove('show'); progressWrap.classList.remove('show');
 });
 
-function handleFile(file) {
-  if (!file.name.toLowerCase().endsWith('.pdf')) {
-    showToast('请选择 PDF 文件');
-    return;
-  }
-  if (file.size > 50 * 1024 * 1024) {
-    showToast('文件不能超过 50MB');
-    return;
-  }
+async function handleFile(file) {
+  if (!file.name.toLowerCase().endsWith('.pdf')) { showToast('请选择 PDF 文件'); return; }
+  if (file.size > 50 * 1024 * 1024) { showToast('文件不能超过 50MB'); return; }
   selectedFile = file;
+  cachedArrayBuffer = await file.arrayBuffer();  // Cache immediately
   fileName.textContent = file.name;
   fileSize.textContent = formatSize(file.size);
-  fileInfo.classList.add('show');
-  uploadZone.style.display = 'none';
-  processBtn.disabled = false;
-  resultDiv.classList.remove('show');
-  progressWrap.classList.remove('show');
-
+  fileInfo.classList.add('show'); uploadZone.style.display = 'none';
+  processBtn.disabled = false; resultDiv.classList.remove('show'); progressWrap.classList.remove('show');
   outputFileName = file.name.replace(/\.pdf$/i, '') + '_白底.pdf';
 }
 
@@ -413,63 +277,150 @@ function formatSize(bytes) {
   return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
 }
 
-// ==================== PDF Processing ====================
-function sampleBackground(pixels, width, height) {
-  // Sample from 4 edges
-  const samples = [];
-  const margin = Math.max(10, Math.floor(Math.min(width, height) * 0.02));
+// ==================== Block-based Background Estimation ====================
+function buildBackgroundMap(pixels, width, height, gridCols, gridRows) {
+  // Divide image into grid blocks, sample background from each block
+  const bw = Math.floor(width / gridCols);
+  const bh = Math.floor(height / gridRows);
+  const bgMap = []; // gridRows x gridCols x [r,g,b]
 
-  for (let y = 5; y < 30; y++) {
-    for (let x = margin; x < width - margin; x++) {
-      const i = (y * width + x) * 4;
-      samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
-    }
-  }
-  for (let y = height - 30; y < height - 5; y++) {
-    for (let x = margin; x < width - margin; x++) {
-      const i = (y * width + x) * 4;
-      samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
-    }
-  }
-  for (let y = margin; y < height - margin; y++) {
-    for (let x = 5; x < 30; x++) {
-      const i = (y * width + x) * 4;
-      samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
-    }
-  }
-  for (let y = margin; y < height - margin; y++) {
-    for (let x = width - 30; x < width - 5; x++) {
-      const i = (y * width + x) * 4;
-      samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
+  for (let gy = 0; gy < gridRows; gy++) {
+    bgMap[gy] = [];
+    for (let gx = 0; gx < gridCols; gx++) {
+      const x0 = gx * bw, y0 = gy * bh;
+      const x1 = Math.min(x0 + bw, width), y1 = Math.min(y0 + bh, height);
+
+      // Sample edge pixels within this block (top/bottom/left/right strips)
+      const samples = [];
+      const strip = 8;
+
+      // Top strip
+      for (let y = y0; y < Math.min(y0 + strip, y1); y++) {
+        for (let x = x0 + strip; x < x1 - strip; x++) {
+          const i = (y * width + x) * 4;
+          samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
+        }
+      }
+      // Bottom strip
+      for (let y = Math.max(y1 - strip, y0 + strip); y < y1; y++) {
+        for (let x = x0 + strip; x < x1 - strip; x++) {
+          const i = (y * width + x) * 4;
+          samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
+        }
+      }
+      // Left strip
+      for (let y = y0 + strip; y < y1 - strip; y++) {
+        for (let x = x0; x < Math.min(x0 + strip, x1); x++) {
+          const i = (y * width + x) * 4;
+          samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
+        }
+      }
+      // Right strip
+      for (let y = y0 + strip; y < y1 - strip; y++) {
+        for (let x = Math.max(x1 - strip, x0 + strip); x < x1; x++) {
+          const i = (y * width + x) * 4;
+          samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
+        }
+      }
+
+      if (samples.length > 0) {
+        const r = samples.map(s => s[0]).sort((a,b) => a-b);
+        const g = samples.map(s => s[1]).sort((a,b) => a-b);
+        const b = samples.map(s => s[2]).sort((a,b) => a-b);
+        const mid = Math.floor(samples.length / 2);
+        bgMap[gy][gx] = [r[mid], g[mid], b[mid]];
+      } else {
+        bgMap[gy][gx] = [200, 200, 200]; // fallback
+      }
     }
   }
 
-  // Median of each channel
-  const r = samples.map(s => s[0]).sort((a,b) => a-b);
-  const g = samples.map(s => s[1]).sort((a,b) => a-b);
-  const b = samples.map(s => s[2]).sort((a,b) => a-b);
-  const mid = Math.floor(samples.length / 2);
-  return [r[mid], g[mid], b[mid]];
+  // Smooth: replace outliers with neighbor median
+  for (let gy = 0; gy < gridRows; gy++) {
+    for (let gx = 0; gx < gridCols; gx++) {
+      const neighbors = [];
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const ny = gy + dy, nx = gx + dx;
+          if (ny >= 0 && ny < gridRows && nx >= 0 && nx < gridCols) {
+            neighbors.push(bgMap[ny][nx]);
+          }
+        }
+      }
+      // If this block's brightness deviates >40 from neighbor median, replace
+      const selfBright = bgMap[gy][gx].reduce((a,b) => a+b, 0);
+      const neighborBrights = neighbors.filter((_, i) => i !== 4).map(n => n.reduce((a,b) => a+b, 0));
+      const medianNbr = neighborBrights.sort((a,b) => a-b)[Math.floor(neighborBrights.length/2)];
+      if (Math.abs(selfBright - medianNbr) > 60) {
+        // Replace with neighbor average
+        const avgNbr = [0, 0, 0];
+        let count = 0;
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            const ny = gy + dy, nx = gx + dx;
+            if (ny >= 0 && ny < gridRows && nx >= 0 && nx < gridCols) {
+              avgNbr[0] += bgMap[ny][nx][0];
+              avgNbr[1] += bgMap[ny][nx][1];
+              avgNbr[2] += bgMap[ny][nx][2];
+              count++;
+            }
+          }
+        }
+        bgMap[gy][gx] = [Math.round(avgNbr[0]/count), Math.round(avgNbr[1]/count), Math.round(avgNbr[2]/count)];
+      }
+    }
+  }
+
+  // Return lookup function: bilinear interpolation
+  return function(x, y) {
+    // Map pixel coords to grid coords
+    let gx = (x / width) * (gridCols - 1);
+    let gy = (y / height) * (gridRows - 1);
+    gx = Math.max(0, Math.min(gridCols - 1.001, gx));
+    gy = Math.max(0, Math.min(gridRows - 1.001, gy));
+
+    const ix = Math.floor(gx), iy = Math.floor(gy);
+    const fx = gx - ix, fy = gy - iy;
+    const ix2 = Math.min(ix + 1, gridCols - 1);
+    const iy2 = Math.min(iy + 1, gridRows - 1);
+
+    const result = [0, 0, 0];
+    for (let c = 0; c < 3; c++) {
+      const v00 = bgMap[iy][ix][c];
+      const v10 = bgMap[iy][ix2][c];
+      const v01 = bgMap[iy2][ix][c];
+      const v11 = bgMap[iy2][ix2][c];
+      result[c] = (1-fy)*((1-fx)*v00 + fx*v10) + fy*((1-fx)*v01 + fx*v11);
+    }
+    return result;
+  };
 }
 
-function whitenPixels(pixels, width, height, bg, level) {
+// ==================== Whitening with Local Background ====================
+function whitenPixels(pixels, width, height, getLocalBg, level) {
   const cfg = {
     low:    { power: 0.6,  finalPower: 0.7,  minThresh: 150 },
     normal: { power: 0.35, finalPower: 0.5,  minThresh: 130 },
     high:   { power: 0.25, finalPower: 0.35, minThresh: 110 },
   }[level] || { power: 0.35, finalPower: 0.5, minThresh: 130 };
 
-  // Step 1: Per-channel whitening
-  const bgStd = [14, 13, 12]; // reasonable defaults
-  const low = [Math.max(bgStd[0]*1.2, 15), Math.max(bgStd[1]*1.2, 15), Math.max(bgStd[2]*1.2, 15)];
-  const high = [Math.max(bgStd[0]*5, 80), Math.max(bgStd[1]*5, 80), Math.max(bgStd[2]*5, 80)];
+  // Step 1: Per-channel whitening with LOCAL background color
+  const bgStd = [14, 13, 12];
+  const lowT = [Math.max(bgStd[0]*1.2, 15), Math.max(bgStd[1]*1.2, 15), Math.max(bgStd[2]*1.2, 15)];
+  const highT = [Math.max(bgStd[0]*5, 80), Math.max(bgStd[1]*5, 80), Math.max(bgStd[2]*5, 80)];
 
-  for (let i = 0; i < pixels.length; i += 4) {
-    for (let c = 0; c < 3; c++) {
-      const diff = Math.abs(pixels[i + c] - bg[c]);
-      let mask = (diff - low[c]) / (high[c] - low[c]);
-      mask = Math.max(0, Math.min(1, mask));
-      pixels[i + c] = mask * pixels[i + c] + (1 - mask) * 255;
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      const i = (y * width + x) * 4;
+      const localBg = getLocalBg(x, y);
+
+      for (let c = 0; c < 3; c++) {
+        const diff = Math.abs(pixels[i + c] - localBg[c]);
+        let mask = (diff - lowT[c]) / (highT[c] - lowT[c]);
+        mask = Math.max(0, Math.min(1, mask));
+        pixels[i + c] = mask * pixels[i + c] + (1 - mask) * 255;
+      }
     }
   }
 
@@ -501,8 +452,77 @@ function whitenPixels(pixels, width, height, bg, level) {
   }
 }
 
-async function processPDF() {
-  if (!selectedFile) return;
+// ==================== Quality Check ====================
+function checkQuality(pixels, width, height) {
+  // Sample edges of processed image and check color uniformity
+  const samples = [];
+  const margin = 20;
+  const strip = 15;
+
+  // Sample from 4 edges
+  for (let y = 5; y < strip; y++) {
+    for (let x = margin; x < width - margin; x += 4) {
+      const i = (y * width + x) * 4;
+      samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
+    }
+  }
+  for (let y = height - strip; y < height - 5; y++) {
+    for (let x = margin; x < width - margin; x += 4) {
+      const i = (y * width + x) * 4;
+      samples.push([pixels[i], pixels[i+1], pixels[i+2]]);
+    }
+  }
+
+  if (samples.length === 0) return { grade: 'unknown', meanRgb: [0,0,0], stdDev: 0, whitePct: 0, message: '无法检测' };
+
+  // Mean and std of each channel
+  const n = samples.length;
+  const means = [0, 0, 0];
+  for (const s of samples) { means[0] += s[0]; means[1] += s[1]; means[2] += s[2]; }
+  means[0] /= n; means[1] /= n; means[2] /= n;
+
+  const vars = [0, 0, 0];
+  for (const s of samples) {
+    vars[0] += (s[0] - means[0])**2;
+    vars[1] += (s[1] - means[1])**2;
+    vars[2] += (s[2] - means[2])**2;
+  }
+  const stdDev = Math.sqrt((vars[0] + vars[1] + vars[2]) / (3 * n));
+
+  // Count near-white pixels in edges
+  let whiteCount = 0;
+  for (const s of samples) {
+    if (s[0] > 245 && s[1] > 245 && s[2] > 245) whiteCount++;
+  }
+  const whitePct = whiteCount / n;
+
+  // Grade
+  let grade, message;
+  const avgBrightness = (means[0] + means[1] + means[2]) / 3;
+
+  if (whitePct > 0.95 && stdDev < 8) {
+    grade = 'good';
+    message = `背景均匀 (${(whitePct*100).toFixed(0)}% 纯白)`;
+  } else if (whitePct > 0.80 && stdDev < 20) {
+    grade = 'ok';
+    message = `背景基本均匀 (${(whitePct*100).toFixed(0)}% 纯白)，建议用"强力"模式重试`;
+  } else {
+    grade = 'bad';
+    message = `背景不够均匀 (${(whitePct*100).toFixed(0)}% 纯白)，建议换"强力"模式重试`;
+  }
+
+  return {
+    grade,
+    meanRgb: means.map(m => Math.round(m)),
+    stdDev: Math.round(stdDev * 10) / 10,
+    whitePct,
+    message
+  };
+}
+
+// ==================== PDF Processing ====================
+async function processPDF(level) {
+  if (!cachedArrayBuffer) return;
 
   processBtn.disabled = true;
   progressWrap.classList.add('show');
@@ -511,102 +531,81 @@ async function processPDF() {
   progressLabel.textContent = '正在加载 PDF...';
   progressDetail.textContent = '';
 
-  const level = levelSelect.value;
-
   try {
-    const arrayBuffer = await selectedFile.arrayBuffer();
-
-    // Load with PDF.js
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.mjs';
-    const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer.slice(0) });
+    const loadingTask = pdfjsLib.getDocument({ data: cachedArrayBuffer.slice(0) });
     const pdfDoc = await loadingTask.promise;
     const pageCount = pdfDoc.numPages;
 
     progressLabel.textContent = `共 ${pageCount} 页，处理中…`;
 
-    // Create new PDF with pdf-lib
-    const { PDFDocument, PageSizes } = PDFLib;
+    const { PDFDocument } = PDFLib;
     const newPdf = await PDFDocument.create();
+    const pageQualities = [];
 
     for (let pn = 1; pn <= pageCount; pn++) {
       progressLabel.textContent = `正在处理第 ${pn}/${pageCount} 页…`;
-      progressBar.style.width = `${((pn - 1) / pageCount) * 90}%`;
-      progressDetail.textContent = '采样背景 → 白化处理 → 替换图片';
+      progressBar.style.width = `${((pn - 1) / pageCount) * 85}%`;
+      progressDetail.textContent = '分块采样 → 局部白化 → 质量检查';
 
       const page = await pdfDoc.getPage(pn);
-
-      // Render at appropriate resolution
       const viewport = page.getViewport({ scale: 2.0 });
       const canvas = document.createElement('canvas');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       const ctx = canvas.getContext('2d');
-
       await page.render({ canvasContext: ctx, viewport }).promise;
 
-      // Get pixel data
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
       const pixels = imageData.data;
 
-      // Sample background
-      const bg = sampleBackground(pixels, canvas.width, canvas.height);
+      // Build spatially-aware background map
+      const gridCols = Math.max(4, Math.floor(canvas.width / 150));
+      const gridRows = Math.max(4, Math.floor(canvas.height / 150));
+      const getLocalBg = buildBackgroundMap(pixels, canvas.width, canvas.height, gridCols, gridRows);
 
-      // Whiten
-      whitenPixels(pixels, canvas.width, canvas.height, bg, level);
+      // Whiten with local background
+      whitenPixels(pixels, canvas.width, canvas.height, getLocalBg, level);
 
-      // Put back
+      // Quality check
+      const q = checkQuality(pixels, canvas.width, canvas.height);
+      pageQualities.push(q);
+
+      // Put back and encode
       ctx.putImageData(imageData, 0, 0);
-
-      // Convert to JPEG blob
-      const jpegBlob = await new Promise(resolve => {
-        canvas.toBlob(resolve, 'image/jpeg', 0.92);
-      });
+      const jpegBlob = await new Promise(resolve => canvas.toBlob(resolve, 'image/jpeg', 0.92));
       const jpegBytes = await jpegBlob.arrayBuffer();
 
-      // Add page to new PDF
       const jpegImage = await newPdf.embedJpg(jpegBytes);
-      const newPage = newPdf.addPage([
-        viewport.width,
-        viewport.height,
-      ]);
-      newPage.drawImage(jpegImage, {
-        x: 0,
-        y: 0,
-        width: viewport.width,
-        height: viewport.height,
-      });
+      const newPage = newPdf.addPage([viewport.width, viewport.height]);
+      newPage.drawImage(jpegImage, { x: 0, y: 0, width: viewport.width, height: viewport.height });
 
-      // Allow UI to update
       await new Promise(r => setTimeout(r, 0));
     }
 
     progressBar.style.width = '95%';
     progressLabel.textContent = '正在生成 PDF…';
-    progressDetail.textContent = '';
 
     outputPdfBytes = await newPdf.save();
+    lastLevel = level;
+
+    // Aggregate quality
+    const avgWhitePct = pageQualities.reduce((s, q) => s + q.whitePct, 0) / pageQualities.length;
+    const worstGrade = pageQualities.map(q => q.grade).sort((a,b) => {
+      const order = {good:0, ok:1, bad:2};
+      return order[b] - order[a];
+    })[0];
+
+    qualityReport = {
+      worstGrade,
+      avgWhitePct,
+      pageDetails: pageQualities,
+    };
 
     progressBar.style.width = '100%';
     progressLabel.textContent = '完成！';
-    progressDetail.textContent = `处理了 ${pageCount} 页，文件大小 ${formatSize(outputPdfBytes.byteLength)}`;
 
-    setTimeout(() => {
-      progressWrap.classList.remove('show');
-      resultDiv.classList.add('show');
-      resultDetail.textContent = `${pageCount} 页 · 背景已白化 · 原始文件未被修改`;
-
-      // Platform-specific hint
-      const ua = navigator.userAgent;
-      const isWeChat = /MicroMessenger/i.test(ua);
-      const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(ua);
-      if (isWeChat) {
-        mobileHint.textContent = '👆 点「查看」→ 右上角「···」→ 分享/保存';
-      } else if (isMobile) {
-        mobileHint.textContent = '👆 点「查看」打开 PDF，然后用浏览器自带功能保存';
-      } else {
-        mobileHint.textContent = '点「查看」预览 · 点「下载」保存到电脑';
-      }
-    }, 600);
+    showResult(pageCount, level);
 
   } catch (err) {
     console.error(err);
@@ -616,49 +615,81 @@ async function processPDF() {
   }
 }
 
-processBtn.addEventListener('click', processPDF);
+function showResult(pageCount, level) {
+  progressWrap.classList.remove('show');
+  resultDiv.classList.add('show');
 
-// ==================== View / Download ====================
-const viewBtn = document.getElementById('viewBtn');
-const mobileHint = document.getElementById('mobileHint');
+  const q = qualityReport;
+  const avgWhite = q.avgWhitePct;
 
-function getPdfBlobUrl() {
-  if (!outputPdfBytes) return null;
-  const blob = new Blob([outputPdfBytes], { type: 'application/pdf' });
-  return URL.createObjectURL(blob);
+  // Quality badge
+  if (q.worstGrade === 'good') {
+    qualityBadge.className = 'quality-badge quality-good';
+    qualityBadge.textContent = `🟢 背景均匀 · ${(avgWhite*100).toFixed(0)}% 纯白`;
+    resultIcon.textContent = '✅';
+    resultTitle.textContent = '处理完成';
+  } else if (q.worstGrade === 'ok') {
+    qualityBadge.className = 'quality-badge quality-ok';
+    qualityBadge.textContent = `🟡 背景基本均匀 · ${(avgWhite*100).toFixed(0)}% 纯白`;
+    resultIcon.textContent = '👌';
+    resultTitle.textContent = '处理完成（建议优化）';
+  } else {
+    qualityBadge.className = 'quality-badge quality-bad';
+    qualityBadge.textContent = `🔴 背景不够均匀 · ${(avgWhite*100).toFixed(0)}% 纯白`;
+    resultIcon.textContent = '⚠️';
+    resultTitle.textContent = '处理完成（建议重试）';
+  }
+
+  resultDetail.textContent = `${pageCount} 页 · 模式: ${level === 'high' ? '强力' : level === 'normal' ? '标准' : '保守'} · 文件大小 ${formatSize(outputPdfBytes.byteLength)}`;
+
+  // Sync re-process selector to current level
+  reLevel.value = level;
+
+  // Platform hint
+  const ua = navigator.userAgent;
+  const isWeChat = /MicroMessenger/i.test(ua);
+  const isMobile = /Android|iPhone|iPad|iPod|webOS/i.test(ua);
+  if (isWeChat) {
+    mobileHint.textContent = '👆 点「查看」→ 右上角「···」→ 分享/保存';
+  } else if (isMobile) {
+    mobileHint.textContent = '👆 点「查看」打开 PDF，然后用浏览器保存';
+  } else {
+    mobileHint.textContent = '点「查看」预览 · 「下载」保存到电脑';
+  }
+
+  processBtn.disabled = false;
 }
 
-// View button - opens PDF in new tab (works on mobile + WeChat)
-viewBtn.addEventListener('click', () => {
-  const url = getPdfBlobUrl();
-  if (!url) return;
-  window.open(url, '_blank');
-  showToast('PDF 已在新标签页打开，可分享或保存');
+// ==================== Process & Re-process ====================
+processBtn.addEventListener('click', () => processPDF(levelSelect.value));
+reprocessBtn.addEventListener('click', () => {
+  resultDiv.classList.remove('show');
+  processPDF(reLevel.value);
 });
 
-// Download button - traditional download (best on desktop)
+// ==================== View / Download ====================
+viewBtn.addEventListener('click', () => {
+  if (!outputPdfBytes) return;
+  const blob = new Blob([outputPdfBytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+  showToast('PDF 已在新标签页打开');
+});
+
 downloadBtn.addEventListener('click', () => {
   if (!outputPdfBytes) return;
   const blob = new Blob([outputPdfBytes], { type: 'application/pdf' });
   const url = URL.createObjectURL(blob);
-
-  // Try download first
   const a = document.createElement('a');
-  a.href = url;
-  a.download = outputFileName;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-
-  // If download didn't work (common on mobile), open in new tab
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  }, 1000);
-  showToast('若未自动下载，请点击上方"查看"按钮');
+  a.href = url; a.download = outputFileName;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+  showToast('若未下载，请点「查看」按钮');
 });
 
 // ==================== Init ====================
 levelSelect.value = 'high';
+reLevel.value = 'high';
 </script>
 
 </body>
